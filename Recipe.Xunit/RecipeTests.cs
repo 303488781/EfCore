@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Recipe.Dal.Models;
 using System;
 using System.Collections.Generic;
@@ -18,11 +19,21 @@ namespace Recipe.Xunit
 
         public RecipeTests(ITestOutputHelper output)
         {
-            var options = new DbContextOptionsBuilder<RecipeContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                  .Options;
+            var options = CreateNewContextOptions();
             dc = new RecipeContext(options);
             this.output = output;
+        }
+
+        private static DbContextOptions<RecipeContext> CreateNewContextOptions()
+        {
+            var serviceProvider = new ServiceCollection()
+                 .AddEntityFrameworkInMemoryDatabase()
+                 .BuildServiceProvider();
+            var builder = new DbContextOptionsBuilder<RecipeContext>();
+
+            builder.UseInMemoryDatabase()
+                 .UseInternalServiceProvider(serviceProvider);
+            return builder.Options;
         }
 
         [Fact]
