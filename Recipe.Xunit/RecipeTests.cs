@@ -13,16 +13,24 @@ namespace Recipe.Xunit
     public class RecipeTests
     {
         private readonly ITestOutputHelper output;
-        private RecipeContext dc = RecipeContext.RecipeContextFactory();
+        private RecipeContext dc;
+        //= RecipeContext.RecipeContextFactory();
 
         public RecipeTests(ITestOutputHelper output)
         {
+            var options = new DbContextOptionsBuilder<RecipeContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                  .Options;
+            dc = new RecipeContext(options);
             this.output = output;
         }
 
         [Fact]
         public void Recipe_Load()
         {
+           
+
+
             var items = dc.Recipes.Take(5);
             Assert.True(items.Any());
             foreach (var recipe in items)

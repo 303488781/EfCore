@@ -41,7 +41,14 @@ namespace Recipe.Dal.Models
         /// Constructor used when unit testing with in memory provider
         /// </summary>
         /// <param name="options"></param>
-        public RecipeContext(DbContextOptions<RecipeContext> options) : base(options) { }
+        public RecipeContext(DbContextOptions<RecipeContext> options) : base(options) {
+            
+            // Configure logging
+            var provider = this.GetInfrastructure<IServiceProvider>();
+            var loggerFactory = provider.GetService<ILoggerFactory>();
+            loggerFactory.AddProvider(new RecipeLoggingProvider());
+
+        }
 
         public async Task<IEnumerable<Recipe>> SearchRecipeAsync(string searchString)
         {

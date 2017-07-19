@@ -4,13 +4,18 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Recipe.Dal.Models
 {
+    /// <summary>
+    ///  #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+    /// </summary>
     public partial class RecipeContext : DbContext
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-            optionsBuilder.UseSqlServer(@"data source=.;initial catalog=recipecore;integrated security=true;",
-                options => options.MaxBatchSize(10));
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer(@"data source=.;initial catalog=recipecore;User ID=sa;Password=zsy@2017;",
+                    options => options.MaxBatchSize(10));
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
